@@ -1,6 +1,5 @@
 package com.yalantis.phoenix.refresh_view;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,13 +8,10 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
-import android.view.animation.Transformation;
 
 import com.yalantis.phoenix.R;
-import com.yalantis.phoenix.util.Utils;
 
 /**
  * Created by shijg on 2017/9/15.
@@ -24,15 +20,8 @@ import com.yalantis.phoenix.util.Utils;
 public class SunAdvancedDrawable extends AdvancedDrawable {
     private Bitmap mSky;
     private Bitmap mSun;
-    private Bitmap mTown;
     private Matrix mMatrix;
-    public static final long MAX_OFFSET_ANIMATION_DURATION = 1000;
-    private static final int DRAG_MAX_DISTANCE_V = 300;
-
-    private final static float SKY_RATIO = 0.65f;
-
-    private final static float TOWN_RATIO = 0.22f;
-
+    private static final long MAX_OFFSET_ANIMATION_DURATION = 1000;
 
     private ValueAnimator valueAnimator;
     private Interpolator mInterpolator = new LinearInterpolator();
@@ -98,7 +87,7 @@ public class SunAdvancedDrawable extends AdvancedDrawable {
 
     @Override
     public boolean isRunning() {
-        return false;
+        return valueAnimator != null && valueAnimator.isRunning();
     }
 
     @Override
@@ -146,10 +135,5 @@ public class SunAdvancedDrawable extends AdvancedDrawable {
                 offsetY + mSunSize / 2);
 
         canvas.drawBitmap(mSun, matrix, null);
-    }
-
-    @Override
-    public boolean canStop() {
-        return true;
     }
 }

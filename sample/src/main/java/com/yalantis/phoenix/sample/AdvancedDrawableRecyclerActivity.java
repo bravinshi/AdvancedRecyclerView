@@ -23,7 +23,7 @@ import java.util.Map;
  * Created by shijianguo on 2017/9/5.
  */
 
-public class Activity3 extends AppCompatActivity {
+public class AdvancedDrawableRecyclerActivity extends AppCompatActivity {
     public static final String KEY_ICON = "icon";
     public static final String KEY_COLOR = "color";
 
@@ -35,10 +35,10 @@ public class Activity3 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_3);
+        setContentView(R.layout.activity_advanced_drawable);
         mRecyclerView = (AdvancedDrawableRecyclerView) findViewById(R.id.recycler_view);
-        myAdapter = new CustomRefreshLoadWrapper(Activity3.this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(Activity3.this));
+        myAdapter = new CustomRefreshLoadWrapper(AdvancedDrawableRecyclerActivity.this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(AdvancedDrawableRecyclerActivity.this));
 
         myAdapter.addGeneral(0);
         myAdapter.addGeneral(0);
@@ -107,7 +107,7 @@ public class Activity3 extends AppCompatActivity {
         @Override
         public RecyclerView.ViewHolder onCreateGeneralVH(ViewGroup parent, int viewType) {
             return new MyViewHolder1(LayoutInflater.from(
-                    Activity3.this).inflate(R.layout.list_item, parent,
+                    AdvancedDrawableRecyclerActivity.this).inflate(R.layout.list_item, parent,
                     false));
         }
 

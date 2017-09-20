@@ -36,7 +36,7 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
     private float INITIAL_Y = -1;
     private float lastY = 0;
 
-    private static final String TAG = "Plus";
+    private static final String TAG = "ADR";
 
     private AdvancedDrawable mRefreshDrawable;
     private AdvancedDrawable mLoadDrawable;
@@ -74,7 +74,7 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
     public void setAdapter(Adapter adapter) {
         super.setAdapter(adapter);
         if (adapter instanceof RefreshLoadWrapper){
-            Log.d(TAG,"adapter instanceof RefreshLoadWrapper");
+            Log.d(TAG,"adapter kind of RefreshLoadWrapper");
             expectedAdapter = true;
             ((RefreshLoadWrapper) adapter).setRefreshDrawable(getContext(),mRefreshDrawable);
             ((RefreshLoadWrapper) adapter).setLoadDrawable(getContext(),mLoadDrawable);
@@ -91,7 +91,7 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
         final int action = MotionEventCompat.getActionMasked(ev);
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                if (isRunning()){
+                if (isRunning()){//
                     // can stop animation
                     stop();
                     //fix initial action_down position
@@ -164,27 +164,11 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
     }
 
     private boolean isRunning(){
-        return mRefreshDrawable.isRunning() || mLoadDrawable.isRunning();
-    }
-
-    private boolean canStop(){
-        if (mRefreshDrawable.isRunning()){
-            return mRefreshDrawable.canStop();
-        }
-        if (mLoadDrawable.isRunning()){
-            return mLoadDrawable.canStop();
-        }
-        // 没有动画正在执行 no animation executing
-        return true;
+        return animator != null && (animator.isRunning() || animator.isStarted());
     }
 
     private void stop(){
-        if (mRefreshDrawable.isRunning()){
-            mRefreshDrawable.stop();
-        }
-        if (mLoadDrawable.isRunning()){
-            mLoadDrawable.stop();
-        }
+        animator.cancel();
     }
 
     private int getViewOffset(float percent){
@@ -271,27 +255,9 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
                     ((RefreshLoadWrapper) getAdapter()).setLoadHeight(getViewOffset(percent));
                     getLayoutManager().offsetChildrenVertical((getViewOffset(prePercent) - getViewOffset(percent)));
                 }
-            }
-        });
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                gettingData = false;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
+                if (percent == 0){
+                    showLoadFlag = showRefreshFlag = false;
+                }
             }
         });
         animator.start();
@@ -331,17 +297,15 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
     }
 
     public void stopRefreshingOrLoading(){
-        if (showRefreshFlag){
-            if (mRefreshDrawable.canStop()) {
-                mRefreshDrawable.stop();
-                toStartPositionAnimation(AdvancedDrawable.CRITICAL_PERCENT);
-            }
-        }else {
-            if (mLoadDrawable.canStop()){
-                mRefreshDrawable.stop();
-                toStartPositionAnimation(AdvancedDrawable.CRITICAL_PERCENT);
-            }
+        if (gettingData){
+            gettingData = false;
         }
-
+        if (showRefreshFlag){
+            mRefreshDrawable.stop();
+            toStartPositionAnimation(AdvancedDrawable.CRITICAL_PERCENT);
+        }else {
+            mRefreshDrawable.stop();
+            toStartPositionAnimation(AdvancedDrawable.CRITICAL_PERCENT);
+        }
     }
 }
