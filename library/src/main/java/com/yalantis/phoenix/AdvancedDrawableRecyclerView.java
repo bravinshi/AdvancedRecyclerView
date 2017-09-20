@@ -73,10 +73,16 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
 
     public void setRefreshDrawable(AdvancedDrawable drawable){
         mRefreshDrawable = drawable;
+        if (expectedAdapter){
+            ((RefreshLoadWrapper) getAdapter()).setRefreshDrawable(getContext(),mRefreshDrawable);
+        }
     }
 
     public void setLoadDrawable(AdvancedDrawable drawable){
         mLoadDrawable = drawable;
+        if (expectedAdapter){
+            ((RefreshLoadWrapper) getAdapter()).setRefreshDrawable(getContext(),mLoadDrawable);
+        }
     }
 
     @Override

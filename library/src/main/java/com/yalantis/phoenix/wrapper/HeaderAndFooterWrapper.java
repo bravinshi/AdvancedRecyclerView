@@ -241,4 +241,18 @@ public abstract class HeaderAndFooterWrapper extends RecyclerView.Adapter<Recycl
         }
         notifyDataSetChanged();
     }
+
+    public void deleteHeader(int position ,boolean invalidate){
+        mHeaders.remove(position);
+        if (invalidate){
+            notifyDataSetChanged();
+        }
+    }
+
+    public void deleteFooter(int position ,boolean invalidate){
+        mFooters.remove(position);
+        if (invalidate){
+            notifyDataSetChanged();
+        }
+    }
 }

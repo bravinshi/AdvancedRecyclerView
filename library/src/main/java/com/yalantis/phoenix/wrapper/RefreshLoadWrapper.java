@@ -25,13 +25,12 @@ public abstract class RefreshLoadWrapper extends HeaderAndFooterWrapper {
     }
 
     private void addRefreshImage(Context c){
-        if (!canRefresh) {
-            if (mRefresh == null){
-                mRefresh = new DrawableView(c);
-                addHeader(0,REFRESH_TYPE);
-            }
-            canRefresh = true;
+        if (canRefresh){
+            deleteHeader(0,false);
         }
+        mRefresh = new DrawableView(c);
+        addHeader(0,REFRESH_TYPE);
+        canRefresh = true;
     }
 
     public void setRefreshDrawable(Context context,AdvancedDrawable drawable){
@@ -45,13 +44,12 @@ public abstract class RefreshLoadWrapper extends HeaderAndFooterWrapper {
     }
 
     private void addLoadImage(Context c){
-        if(!canLoad) {
-            if (mLoad == null){
-                mLoad = new DrawableView(c);
-                addFooter(0,LOAD_TYPE);
-            }
-            canLoad = true;
+        if (canLoad){
+            deleteFooter(getFooterViewCount() - 1,false);
         }
+        mLoad = new DrawableView(c);
+        addFooter(0,LOAD_TYPE);
+        canLoad = true;
     }
 
     public void setRefreshHeight(int height){
@@ -92,17 +90,13 @@ public abstract class RefreshLoadWrapper extends HeaderAndFooterWrapper {
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (!(position == 0 && canRefresh)) {
-
-        }else {
             onBindHeaderVH(holder, position);
         }
     }
 
     @Override
     public void onBindFooterViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (!(position == getFooterViewCount() && canLoad)){
-
-        }else {
+        if (!(position == getFooterViewCount() - 1 && canLoad)){
             onBindFooterVH(holder,position);
         }
     }
