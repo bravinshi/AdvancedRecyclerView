@@ -1,5 +1,6 @@
 package com.yalantis.phoenix.refresh_view;
 
+import android.content.Context;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Animatable;
@@ -7,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
 
 /**
  * Created by shijianguo on 2017/9/10.
@@ -56,4 +58,11 @@ public abstract class AdvancedDrawable extends Drawable implements Animatable {
     public void setAdapter(RecyclerView.Adapter adapter){
         mAdapter = adapter;
     }
+
+    /**
+     * u have to initial ur bitmaps u needed , dWidth and dHeight here
+     *
+     * @param context context
+     */
+    protected abstract void init(Context context);
 }

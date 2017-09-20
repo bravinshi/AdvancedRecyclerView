@@ -12,7 +12,7 @@ import android.support.v7.widget.Toolbar;
 /**
  * Created by Oleksii Shliama.
  */
-public class PullToRefreshActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +41,10 @@ public class PullToRefreshActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new ListViewFragment();
+                    return new CustomItemDecorFragment();
                 case 1:
                 default:
-                    return new RecyclerViewFragment();
+                    return new AdvancedDrawableFragment();
             }
         }
 
@@ -57,10 +57,10 @@ public class PullToRefreshActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "ListView";
+                    return "CustomItemDecor";
                 case 1:
                 default:
-                    return "RecyclerView";
+                    return "AdvancedDrawable";
             }
         }
     }

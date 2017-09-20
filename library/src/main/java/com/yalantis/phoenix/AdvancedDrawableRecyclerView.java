@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.yalantis.phoenix.interfacepackage.RefreshableAndLoadable;
 import com.yalantis.phoenix.refresh_view.AdvancedDrawable;
+import com.yalantis.phoenix.refresh_view.SunAdvancedBottomDrawable;
 import com.yalantis.phoenix.refresh_view.SunAdvancedDrawable;
 import com.yalantis.phoenix.wrapper.RefreshLoadWrapper;
 
@@ -25,12 +26,12 @@ import com.yalantis.phoenix.wrapper.RefreshLoadWrapper;
  */
 
 public class AdvancedDrawableRecyclerView extends RecyclerView {
-    private boolean refreshSupport = true;
-    private boolean loadSupport = true;
+    private boolean canRefresh = false;
+    private boolean canLoad = false;
 
     private static final int DRAG_MAX_DISTANCE_V = 300;
     public static final long MAX_OFFSET_ANIMATION_DURATION = 500;
-    private static final float DRAG_RATE = 0.2f;
+    private static final float DRAG_RATE = 0.3f;
 
     private float INITIAL_X = -1;
     private float INITIAL_Y = -1;
@@ -67,7 +68,15 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
     void init(Context context){
         ViewCompat.setChildrenDrawingOrderEnabled(this, true);
         mRefreshDrawable = new SunAdvancedDrawable(context,this);
-        mLoadDrawable = new SunAdvancedDrawable(context,this);
+        mLoadDrawable = new SunAdvancedBottomDrawable(context,this);
+    }
+
+    public void setRefreshDrawable(AdvancedDrawable drawable){
+        mRefreshDrawable = drawable;
+    }
+
+    public void setLoadDrawable(AdvancedDrawable drawable){
+        mLoadDrawable = drawable;
     }
 
     @Override
@@ -87,7 +96,8 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent ev) {
-        if (!expectedAdapter || gettingData)return super.onTouchEvent(ev);
+        if (!expectedAdapter || (!canRefresh && !canLoad))return super.onTouchEvent(ev);
+        if (gettingData)return true;
         final int action = MotionEventCompat.getActionMasked(ev);
         switch (action) {
             case MotionEvent.ACTION_DOWN:
@@ -107,6 +117,7 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
                 if (agentY > INITIAL_Y){
                     // towards bottom
                     if (!canChildScrollUp()){
+                        if (!canRefresh)return super.onTouchEvent(ev);
                         if (showLoadFlag)showLoadFlag = false;
                         if (!showRefreshFlag){
                             showRefreshFlag = true;
@@ -125,6 +136,7 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
                 } else if (agentY < INITIAL_Y){
 
                     if (!canChildScrollBottom()){
+                        if (!canLoad)return super.onTouchEvent(ev);
                         if (showRefreshFlag)showRefreshFlag = false;
                         if (!showLoadFlag){
                             showLoadFlag = true;
@@ -304,8 +316,16 @@ public class AdvancedDrawableRecyclerView extends RecyclerView {
             mRefreshDrawable.stop();
             toStartPositionAnimation(AdvancedDrawable.CRITICAL_PERCENT);
         }else {
-            mRefreshDrawable.stop();
+            mLoadDrawable.stop();
             toStartPositionAnimation(AdvancedDrawable.CRITICAL_PERCENT);
         }
+    }
+
+    public void setCanRefresh(boolean canRefresh){
+        this.canRefresh = canRefresh;
+    }
+
+    public void setCanLoad(boolean canLoad){
+        this.canLoad = canLoad;
     }
 }

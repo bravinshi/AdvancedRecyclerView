@@ -17,7 +17,7 @@ import com.yalantis.phoenix.R;
  * Created by shijg on 2017/9/15.
  */
 
-public class SunAdvancedDrawable extends AdvancedDrawable {
+public class SunAdvancedBottomDrawable extends AdvancedDrawable {
     private Bitmap mSky;
     private Bitmap mSun;
     private Matrix mMatrix;
@@ -34,7 +34,7 @@ public class SunAdvancedDrawable extends AdvancedDrawable {
     private int sunRoutingHeight;
     private boolean startAnimation = false;
 
-    public SunAdvancedDrawable(Context context, final View view){
+    public SunAdvancedBottomDrawable(Context context, final View view){
         super();
         view.post(new Runnable() {
             @Override
@@ -115,8 +115,8 @@ public class SunAdvancedDrawable extends AdvancedDrawable {
     private void drawSky(Canvas canvas) {
         Matrix matrix = mMatrix;
         matrix.reset();
-        int offsetY = (int) (30 * Math.min(mPercent,1)) - 50;
-        matrix.postTranslate(0,offsetY);
+        int offsetY = (int) (30 * Math.min(mPercent,1));
+        matrix.postTranslate(0,-offsetY);
         canvas.drawBitmap(mSky, matrix, null);
     }
 

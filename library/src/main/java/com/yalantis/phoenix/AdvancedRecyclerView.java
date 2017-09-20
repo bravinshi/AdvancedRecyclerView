@@ -25,15 +25,15 @@ import com.yalantis.phoenix.itemdecor.CustomItemDecor;
  * Created by shijianguo on 2017/8/17.
  */
 
-public class AdvancedRecyclerView extends RecyclerView implements RefreshableAndLoadable {
+public class AdvancedRecyclerView extends RecyclerView {
 
-    private boolean isSupportRefresh = false;
-    private boolean isSupportLoad = false;
+    private boolean canRefresh = true;
+    private boolean canLoad = false;
 
     private static final int DRAG_MAX_DISTANCE_V = 300;
-    private static final float DRAG_RATE = 0.4f;
+    private static final float DRAG_RATE = 0.48f;
 
-    public static final long MAX_OFFSET_ANIMATION_DURATION = 1000;
+    public static final long MAX_OFFSET_ANIMATION_DURATION = 500;
 
     private static final int INVALID_POINTER = -1;
 
@@ -64,17 +64,11 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
 
     public void init(Context context){
         mItemDecor = new ItemDecor(this);
-        post(new Runnable() {
-            @Override
-            public void run() {
-                mItemDecor.setParentWidthAndHeight(getMeasuredWidth(),getMeasuredHeight());
-            }
-        });
     }
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent ev) {
-        if (!mItemDecor.canStop())return true;
+        if ((!canRefresh && !canLoad) || !mItemDecor.canInterrupt())return super.onTouchEvent(ev);
         final int action = MotionEventCompat.getActionMasked(ev);
         switch (action){
             case MotionEvent.ACTION_DOWN:
@@ -108,6 +102,7 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
                         }
                         break;
                     }else {
+                        if (!canRefresh)return super.onTouchEvent(ev);
                         if (!showRefreshFlag){
                             showRefreshFlag = true;
                             INITIAL_Y = agentY;
@@ -126,6 +121,7 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
                         }
                         break;
                     }else {
+                        if (!canLoad)return super.onTouchEvent(ev);
                         if(!showLoadFlag){
                             showLoadFlag = true;
                             INITIAL_Y = agentY;
@@ -157,7 +153,7 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
     }
 
     private void cancelAnimation(){
-        mItemDecor.stopAnimationAndSaveState();
+        mItemDecor.interruptAnimation();
     }
 
     private void calculateInitY(float agentY,int maxDragDistance,float rate,float percent){
@@ -184,26 +180,6 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
         return ViewCompat.canScrollVertically(this, 1);
     }
 
-    @Override
-    public void onRefreshing() {
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mItemDecor.stopRefreshingOrLoading();
-            }
-        },2000);
-    }
-
-    @Override
-    public void onLoading() {
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mItemDecor.stopRefreshingOrLoading();
-            }
-        },2000);
-    }
-
     public class ItemDecor extends CustomItemDecor {
 
         Paint mPaint;
@@ -218,16 +194,11 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
         private ValueAnimator animator;
         private float offsetAngle = 0;
         private boolean canStopAnimation = true;
-        RefreshableAndLoadable mDataSource;
-        private int parentWidth = 0;
-        private int parentHeight = 0;
         private static final float CRITICAL_PERCENT = 0.8f;
 
-        public ItemDecor(RefreshableAndLoadable view) {
-            super((View) view);
+        public ItemDecor(View view) {
+            super(view);
             init();
-            this.mDataSource = view;
-
         }
 
         private void init(){
@@ -244,7 +215,7 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
         public void onDrawOver(Canvas c, RecyclerView parent, State state) {
             if (showRefreshFlag && refreshPercent > 0){// refresh logo visible
                 // draw background circle
-                c.drawCircle(parentWidth / 2, -backgroundRadius + refreshPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius),
+                c.drawCircle(getMeasuredWidth() / 2, -backgroundRadius + refreshPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius),
                         backgroundRadius, mPaint);
                 if (getSweepAngle() >= SWEEP_ANGLE_MAX_VALUE){// if need, draw circle point
                     drawCirclePoint(true,c);
@@ -253,7 +224,7 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
                 c.drawArc(oval,getStartAngle(),getSweepAngle(),false,ovalPaint);// draw arc
             }else if (showLoadFlag && loadPercent > 0){// load logo visible
                 // draw background circle
-                c.drawCircle(parentWidth / 2, parentHeight + backgroundRadius -
+                c.drawCircle(getMeasuredWidth() / 2, getMeasuredHeight() + backgroundRadius -
                         loadPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius), backgroundRadius, mPaint);
                 if (getSweepAngle() >= SWEEP_ANGLE_MAX_VALUE){// if need, draw circle point
                     drawCirclePoint(false,c);
@@ -274,14 +245,14 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
             // calculate zhe angle of the point relative to logo central point
             final double circleAngle = (360 - SWEEP_ANGLE_MAX_VALUE) / 2 - getStartAngle();
             // calculate X coordinate for point center
-            final float circleX = parentWidth / 2 + (float) (Math.cos(circleAngle * Math.PI / 180) * ovalRadius);
+            final float circleX = getMeasuredWidth() / 2 + (float) (Math.cos(circleAngle * Math.PI / 180) * ovalRadius);
             // calculate Y coordinate for point center
             float circleY;
             if (refresh){
                 circleY = -backgroundRadius + refreshPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) -
                         (float) (Math.sin(circleAngle * Math.PI / 180) * ovalRadius);
             }else {
-                circleY = parentHeight + backgroundRadius -
+                circleY = getMeasuredHeight() + backgroundRadius -
                         loadPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) -
                         (float) (Math.sin(circleAngle * Math.PI / 180) * ovalRadius);
             }
@@ -291,11 +262,11 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
 
         private void calculateOvalAngle(){
             if (showRefreshFlag){
-                oval.set(parentWidth / 2 - ovalRadius,-backgroundRadius + refreshPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) - ovalRadius,
-                        parentWidth / 2 + ovalRadius,-backgroundRadius + refreshPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) + ovalRadius);
+                oval.set(getMeasuredWidth() / 2 - ovalRadius,-backgroundRadius + refreshPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) - ovalRadius,
+                        getMeasuredWidth() / 2 + ovalRadius,-backgroundRadius + refreshPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) + ovalRadius);
             }else {
-                oval.set(parentWidth / 2 - ovalRadius,parentHeight + backgroundRadius - loadPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) - ovalRadius,
-                        parentWidth / 2 + ovalRadius,parentHeight + backgroundRadius - loadPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) + ovalRadius);
+                oval.set(getMeasuredWidth() / 2 - ovalRadius,getMeasuredHeight() + backgroundRadius - loadPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) - ovalRadius,
+                        getMeasuredWidth() / 2 + ovalRadius,getMeasuredHeight() + backgroundRadius - loadPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) + ovalRadius);
             }
         }
 
@@ -361,7 +332,7 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
         private void toCriticalPositionAnimation(final float start){
             animator = ValueAnimator.ofFloat(start,CRITICAL_PERCENT);
             animator.setInterpolator(mInterpolator);
-            animator.setDuration((long) (MAX_OFFSET_ANIMATION_DURATION * (start - CRITICAL_PERCENT) * 0.8));
+            animator.setDuration((long) (MAX_OFFSET_ANIMATION_DURATION * (start - CRITICAL_PERCENT)));
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -374,12 +345,10 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
                     if (value == CRITICAL_PERCENT){
                         startRotateAnimation();
                         if (showRefreshFlag){
-                            Toast.makeText(getContext(),"refresh",Toast.LENGTH_SHORT).show();
                             if (mDataSource != null){
                                 mDataSource.onRefreshing();
                             }
                         }else {
-                            Toast.makeText(getContext(),"load",Toast.LENGTH_SHORT).show();
                             if (mDataSource != null){
                                 mDataSource.onLoading();
                             }
@@ -457,33 +426,39 @@ public class AdvancedRecyclerView extends RecyclerView implements RefreshableAnd
         }
 
         @Override
-        public void stopRefreshingOrLoading(){
+        public void stop(){
             if (valueAnimator != null && (valueAnimator.isStarted() || valueAnimator.isRunning())){
                 valueAnimator.cancel();
             }
         }
 
         @Override
-        public void stopAnimationAndSaveState(){
+        public boolean canInterrupt(){
+            return canStopAnimation;
+        }
+
+        @Override
+        public void interruptAnimation(){
             if (!canStopAnimation)return;
             if (animator != null && (animator.isStarted() || animator.isRunning())){
                 animator.cancel();
             }
         }
+    }
 
-        @Override
-        public boolean canStop(){
-            return canStopAnimation;
-        }
+    public void setRefreshableAndLoadable(RefreshableAndLoadable dataSource){
+        mItemDecor.setRefreshableAndLoadable(dataSource);
+    }
 
-        @Override
-        public void setParentWidthAndHeight(int width,int height){
-            parentWidth = width;
-            parentHeight = height;
-        }
+    public void stop(){
+        mItemDecor.stop();
+    }
 
-        public void setRefreshableAndLoadable(RefreshableAndLoadable dataSource){
-            mDataSource = dataSource;
-        }
+    public void setCanRefresh(boolean canRefresh){
+        this.canRefresh = canRefresh;
+    }
+
+    public void setCanLoad(boolean canLoad){
+        this.canLoad = canLoad;
     }
 }
