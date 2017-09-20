@@ -16,7 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
-import android.widget.Toast;
 
 import com.yalantis.phoenix.interfacepackage.RefreshableAndLoadable;
 import com.yalantis.phoenix.itemdecor.CustomItemDecor;
@@ -35,14 +34,11 @@ public class AdvancedRecyclerView extends RecyclerView {
 
     public static final long MAX_OFFSET_ANIMATION_DURATION = 500;
 
-    private static final int INVALID_POINTER = -1;
-
-    private float INITIAL_X = -1;
     private float INITIAL_Y = -1;
 
     private Interpolator mInterpolator = new LinearInterpolator();
 
-    private static final String TAG = "plus";
+    private static final String TAG = "AdvancedRecyclerView";
 
     private boolean showRefreshFlag = false;
     private boolean showLoadFlag = false;
@@ -75,11 +71,10 @@ public class AdvancedRecyclerView extends RecyclerView {
                 if (!mItemDecor.isRunning()){
                     INITIAL_Y = MotionEventCompat.getY(ev,0);
                 }else {// animating
-                    cancelAnimation();
+                    mItemDecor.interruptAnimation();
                     // 如果取消正在运行的动画，需要动用calculateInitY方法把对应的INITIAL_Y计算出来
                     // 由于RecyclerView记录的action down的位置和我们逻辑上的action down位置不一致
-                    // 所以要手动生成一个MotionEvent对象作为参数调用super.onTouchEvent()来修正，否则
-                    // 滑动效果会发生混乱
+                    // 所以要手动生成一个MotionEvent对象作为参数调用super.onTouchEvent()来修正
                     calculateInitY(MotionEventCompat.getY(ev,0),DRAG_MAX_DISTANCE_V,DRAG_RATE,
                             showRefreshFlag ? mItemDecor.getRefreshPercent() : -mItemDecor.getLoadPercent());
                     // correct action-down position
@@ -92,7 +87,7 @@ public class AdvancedRecyclerView extends RecyclerView {
                 final float agentY = MotionEventCompat.getY(ev,0);
                 if (agentY > INITIAL_Y){
                     // towards bottom
-                    if (showLoadFlag)showLoadFlag = false;
+                    if (showLoadFlag)showLoadFlag = false;// 手指上下摆动导致状态切换
                     if (canChildScrollUp()){
                         if(showRefreshFlag){
                             showRefreshFlag = false;
@@ -101,9 +96,9 @@ public class AdvancedRecyclerView extends RecyclerView {
                             return super.onTouchEvent(ev);
                         }
                         break;
-                    }else {
+                    }else {// 不能向下滚动
                         if (!canRefresh)return super.onTouchEvent(ev);
-                        if (!showRefreshFlag){
+                        if (!showRefreshFlag){// 从能滚动切换为不能滚动
                             showRefreshFlag = true;
                             INITIAL_Y = agentY;
                         }
@@ -111,7 +106,7 @@ public class AdvancedRecyclerView extends RecyclerView {
                     }
                 }else if(agentY < INITIAL_Y) {
                     // towards top
-                    if (showRefreshFlag)showRefreshFlag = false;
+                    if (showRefreshFlag)showRefreshFlag = false;// 手指上下摆动导致状态切换
                     if(canChildScrollBottom()){
                         if(showLoadFlag){
                             showLoadFlag = false;
@@ -122,7 +117,7 @@ public class AdvancedRecyclerView extends RecyclerView {
                         break;
                     }else {
                         if (!canLoad)return super.onTouchEvent(ev);
-                        if(!showLoadFlag){
+                        if(!showLoadFlag){// 从能滚动切换为不能滚动
                             showLoadFlag = true;
                             INITIAL_Y = agentY;
                         }
@@ -152,18 +147,36 @@ public class AdvancedRecyclerView extends RecyclerView {
         mItemDecor.start();
     }
 
-    private void cancelAnimation(){
-        mItemDecor.interruptAnimation();
-    }
-
+    /**
+     * 计算中断动画时，percent对应的InitY
+     * calculate the InitY corresponding to current(animation interrupted) percent
+     *
+     * @param agentY
+     * @param maxDragDistance
+     * @param rate
+     * @param percent
+     */
     private void calculateInitY(float agentY,int maxDragDistance,float rate,float percent){
         INITIAL_Y = agentY - percent * (float) maxDragDistance / rate;
     }
 
+    /**
+     * 计算百分比 coder可以调节rate值来改变手指移动的距离改变percent的速度
+     * @param initialPos
+     * @param currentPos
+     * @param maxDragDistance
+     * @param rate
+     * @return
+     */
     private float calculatePercent(float initialPos,float currentPos,int maxDragDistance,float rate){
         return (currentPos - initialPos) * rate / ((float) maxDragDistance);
     }
 
+    /**
+     * 当percent大于1时，大幅减少percent增长的幅度
+     * @param initPercent
+     * @return
+     */
     private float fixPercent(float initPercent){
         if (initPercent <= 1){
             return initPercent;
@@ -171,6 +184,7 @@ public class AdvancedRecyclerView extends RecyclerView {
             return 1f + (initPercent - 1f) * 0.6f;
         }
     }
+
 
     private boolean canChildScrollUp() {
         return ViewCompat.canScrollVertically(this, -1);
@@ -194,7 +208,7 @@ public class AdvancedRecyclerView extends RecyclerView {
         private ValueAnimator animator;
         private float offsetAngle = 0;
         private boolean canStopAnimation = true;
-        private static final float CRITICAL_PERCENT = 0.8f;
+        private static final float CRITICAL_PERCENT = 0.8f;// 可以refresh或load的临界百分比
 
         public ItemDecor(View view) {
             super(view);
@@ -260,6 +274,9 @@ public class AdvancedRecyclerView extends RecyclerView {
             ovalPaint.setStyle(Paint.Style.STROKE);
         }
 
+        /**
+         * calculate arc circumcircle's position
+         */
         private void calculateOvalAngle(){
             if (showRefreshFlag){
                 oval.set(getMeasuredWidth() / 2 - ovalRadius,-backgroundRadius + refreshPercent * (DRAG_MAX_DISTANCE_V + backgroundRadius) - ovalRadius,
@@ -329,6 +346,10 @@ public class AdvancedRecyclerView extends RecyclerView {
             return false;
         }
 
+        /**
+         * 让标识平移到临界位置
+         * @param start
+         */
         private void toCriticalPositionAnimation(final float start){
             animator = ValueAnimator.ofFloat(start,CRITICAL_PERCENT);
             animator.setInterpolator(mInterpolator);
@@ -359,6 +380,11 @@ public class AdvancedRecyclerView extends RecyclerView {
             animator.start();
         }
 
+        /**
+         * 让标识平移到起始位置
+         * @param start
+         * @param end
+         */
         private void translationAnimation(final float start,final float end){
             animator = ValueAnimator.ofFloat(start,end);
             animator.setInterpolator(mInterpolator);
@@ -380,6 +406,9 @@ public class AdvancedRecyclerView extends RecyclerView {
             animator.start();
         }
 
+        /**
+         * 开始旋转动画
+         */
         void initRotateAnimation(){
             valueAnimator = ValueAnimator.ofFloat(1,360);
             valueAnimator.setInterpolator(new LinearInterpolator());
