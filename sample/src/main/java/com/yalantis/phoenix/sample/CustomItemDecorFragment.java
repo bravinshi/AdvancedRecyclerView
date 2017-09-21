@@ -35,30 +35,7 @@ public class CustomItemDecorFragment extends BaseRefreshFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_recycler_view, container, false);
         myAdapter = new MyHeaderAndFooterWrapper(container.getContext());
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
-//        myAdapter.addGeneral(0);
+
         myAdapter.addGeneral(0);
         myAdapter.addGeneral(0);
         myAdapter.addGeneral(0);

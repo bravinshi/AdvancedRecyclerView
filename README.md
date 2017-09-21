@@ -38,7 +38,32 @@ load
 
 
 
+#use
 
+前景效果需要配合AdvancedRecyclerView类，你需要创建一个AdvancedRecyclerView类对象，然后像使用普通的RecyclerView一样使用它就行了。就这么简单。
+
+
+背景效果需要配合AdvancedDrawableRecyclerView类，你需要创建一个AdvancedDrawableRecyclerView类对象，然后设置刷新和加载的Drawable(你需要自定义)
+just like this.
+
+
+```Java
+mRecyclerView = (AdvancedDrawableRecyclerView) rootView.findViewById(R.id.recycler_view);
+        myAdapter = new CustomRefreshLoadWrapper(container.getContext());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+
+        myAdapter.addGeneral(0);
+        myAdapter.addGeneral(0);
+        myAdapter.addGeneral(0);
+
+        mRecyclerView.setAdapter(myAdapter);
+
+        mRecyclerView.setCanLoad(true);
+        mRecyclerView.setRefreshDrawable(new SunAdvancedDrawable(container.getContext(),mRecyclerView) );
+        mRecyclerView.setLoadDrawable(new SunAdvancedDrawable(container.getContext(),mRecyclerView) );
+```
+
+默认是有我自己写的动画，鉴于我的动画比较粗糙，我强烈建议你自定义所需的炫酷动画。
 
 
 
@@ -59,7 +84,6 @@ u should not use ItemDecoration without RecylerView,in consideration of this,ur 
 实现背景效果可以自定义继承AdvancedDrawable的类
 
 self-defining a class extending AdvancedDrawable(background)
-
 
 
 
