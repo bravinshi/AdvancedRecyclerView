@@ -1,4 +1,4 @@
 # AdvancedRecyclerView
 RecyclerView with refresh animation and load animation
 
-![](http://img.blog.csdn.net/20170921142741530)
+![](https://github.com/bravinshi/bravinTest/raw/master/source/a1-1.gif)  
