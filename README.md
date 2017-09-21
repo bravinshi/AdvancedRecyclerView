@@ -7,6 +7,8 @@ RecyclerView with refresh animation and load animation
 ## ItemDecoration(foreground)
 
 refresh
+
+
 ![](https://github.com/bravinshi/bravinTest/raw/master/source/a1-1.gif) 
 
 
@@ -38,7 +40,7 @@ load
 
 
 
-#use
+# use
 
 前景效果需要配合AdvancedRecyclerView类，你需要创建一个AdvancedRecyclerView类对象，然后像使用普通的RecyclerView一样使用它就行了。就这么简单。
 
