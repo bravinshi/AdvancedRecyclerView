@@ -88,6 +88,9 @@ public class CustomItemDecorFragment extends BaseRefreshFragment {
                     @Override
                     public void run() {
                         mRecyclerView.stop();
+                        myAdapter.addGeneral(0);
+                        myAdapter.addGeneral(0);
+                        myAdapter.notifyDataSetChanged();
                     }
                 },2000);
             }

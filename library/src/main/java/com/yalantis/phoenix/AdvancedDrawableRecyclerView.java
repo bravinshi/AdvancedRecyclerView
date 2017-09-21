@@ -26,7 +26,7 @@ import com.yalantis.phoenix.wrapper.RefreshLoadWrapper;
  */
 
 public class AdvancedDrawableRecyclerView extends RecyclerView {
-    private boolean canRefresh = false;
+    private boolean canRefresh = true;
     private boolean canLoad = false;
 
     private static final int DRAG_MAX_DISTANCE_V = 300;
