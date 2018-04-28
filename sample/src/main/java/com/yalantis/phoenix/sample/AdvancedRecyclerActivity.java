@@ -48,7 +48,13 @@ public class AdvancedRecyclerActivity extends AppCompatActivity {
         myAdapter.addGeneral(0);
 //        myAdapter.addGeneral(0);
         myAdapter.addGeneral(0);
+        myAdapter.addGeneral(0);
+        myAdapter.addHeader(0);
+        myAdapter.addHeader(0);
+        myAdapter.addFooter(0);
+        myAdapter.addFooter(0);
 
+     
         Map<String, Integer> map;
         mSampleList = new ArrayList<>();
 
