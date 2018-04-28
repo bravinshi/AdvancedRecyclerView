@@ -34,7 +34,7 @@ load
 
 
 
-#¶¯»­Ö§³Ö´ò¶Ï  support interruption ÔÚ¶¯»­´Ó×îµÍ£¨¸ß£©µã»Øµ¯µ«ÊÇ»¹Ã»Ë¢ĞÂ£¨¼ÓÔØ£©»òÕßÒÑ¾­Ë¢ĞÂ£¨¼ÓÔØ£©Íê³ÉÈ»ºó»Øµ¯µ½ÆğÊ¼Î»ÖÃÊ±£¬¶¯»­Ö§³Ö´ò¶Ï¡£
+#åŠ¨ç”»æ”¯æŒæ‰“æ–­  support interruption åœ¨åŠ¨ç”»ä»æœ€ä½ï¼ˆé«˜ï¼‰ç‚¹å›å¼¹ä½†æ˜¯è¿˜æ²¡åˆ·æ–°ï¼ˆåŠ è½½ï¼‰æˆ–è€…å·²ç»åˆ·æ–°ï¼ˆåŠ è½½ï¼‰å®Œæˆç„¶åå›å¼¹åˆ°èµ·å§‹ä½ç½®æ—¶ï¼ŒåŠ¨ç”»æ”¯æŒæ‰“æ–­ã€‚
 
 ![](https://github.com/bravinshi/bravinTest/raw/master/source/a7.gif) 
 
@@ -42,10 +42,10 @@ load
 
 # use
 
-Ç°¾°Ğ§¹ûĞèÒªÅäºÏAdvancedRecyclerViewÀà£¬ÄãĞèÒª´´½¨Ò»¸öAdvancedRecyclerViewÀà¶ÔÏó£¬È»ºóÏñÊ¹ÓÃÆÕÍ¨µÄRecyclerViewÒ»ÑùÊ¹ÓÃËü¾ÍĞĞÁË¡£¾ÍÕâÃ´¼òµ¥¡£
+å‰æ™¯æ•ˆæœéœ€è¦é…åˆAdvancedRecyclerViewç±»ï¼Œä½ éœ€è¦åˆ›å»ºä¸€ä¸ªAdvancedRecyclerViewç±»å¯¹è±¡ï¼Œç„¶ååƒä½¿ç”¨æ™®é€šçš„RecyclerViewä¸€æ ·ä½¿ç”¨å®ƒå°±è¡Œäº†ã€‚å°±è¿™ä¹ˆç®€å•ã€‚
 
 
-±³¾°Ğ§¹ûĞèÒªÅäºÏAdvancedDrawableRecyclerViewÀà£¬ÄãĞèÒª´´½¨Ò»¸öAdvancedDrawableRecyclerViewÀà¶ÔÏó£¬È»ºóÉèÖÃË¢ĞÂºÍ¼ÓÔØµÄDrawable(ÄãĞèÒª×Ô¶¨Òå)
+èƒŒæ™¯æ•ˆæœéœ€è¦é…åˆAdvancedDrawableRecyclerViewç±»ï¼Œä½ éœ€è¦åˆ›å»ºä¸€ä¸ªAdvancedDrawableRecyclerViewç±»å¯¹è±¡ï¼Œç„¶åè®¾ç½®åˆ·æ–°å’ŒåŠ è½½çš„Drawable(ä½ éœ€è¦è‡ªå®šä¹‰)
 just like this.
 
 
@@ -65,15 +65,15 @@ mRecyclerView = (AdvancedDrawableRecyclerView) rootView.findViewById(R.id.recycl
         mRecyclerView.setLoadDrawable(new SunAdvancedDrawable(container.getContext(),mRecyclerView) );
 ```
 
-Ä¬ÈÏÊÇÓĞÎÒ×Ô¼ºĞ´µÄ¶¯»­£¬¼øÓÚÎÒµÄ¶¯»­±È½Ï´Ö²Ú£¬ÎÒÇ¿ÁÒ½¨ÒéÄã×Ô¶¨ÒåËùĞèµÄìÅ¿á¶¯»­¡£
+é»˜è®¤æ˜¯æœ‰æˆ‘è‡ªå·±å†™çš„åŠ¨ç”»ï¼Œé‰´äºæˆ‘çš„åŠ¨ç”»æ¯”è¾ƒç²—ç³™ï¼Œæˆ‘å¼ºçƒˆå»ºè®®ä½ è‡ªå®šä¹‰æ‰€éœ€çš„ç‚«é…·åŠ¨ç”»ã€‚
 
 
 
-¼øÓÚĞèÇó²»Í¬£¬Äã¿ÉÄÜĞèÒª×Ô¶¨ÒåĞ§¹û£¬Èç¹ûÏëÊµÏÖÇ°¾°Ğ§¹û£¬Äã¿ÉÒÔ×Ô¶¨ÒåÒ»¸öÀà£¬¼Ì³ĞÏîÄ¿ÖĞµÄCustomItemDecorÀ´ÊµÏÖ
-ÓÉÓÚItemDecorationĞèÒªÅäºÏRecylerViewÊ¹ÓÃ£¬ÎÒ°ÑItemDecorationĞèÒªµÄÊı¾İÖ±½Ó·ÅÔÚ×Ô¶¨ÒåµÄRecylerViewÀïÁË£¬Ã»ÓĞ×ö½âñî£¬
-ËùÒÔ×Ô¶¨ÒåÀà¿ÉÄÜĞèÒª×÷ÎªAdvancedRecylerViewµÄÄÚ²¿ÀàÊµÏÖÁË¡£
+é‰´äºéœ€æ±‚ä¸åŒï¼Œä½ å¯èƒ½éœ€è¦è‡ªå®šä¹‰æ•ˆæœï¼Œå¦‚æœæƒ³å®ç°å‰æ™¯æ•ˆæœï¼Œä½ å¯ä»¥è‡ªå®šä¹‰ä¸€ä¸ªç±»ï¼Œç»§æ‰¿é¡¹ç›®ä¸­çš„CustomItemDecoræ¥å®ç°
+ç”±äºItemDecorationéœ€è¦é…åˆRecylerViewä½¿ç”¨ï¼Œæˆ‘æŠŠItemDecorationéœ€è¦çš„æ•°æ®ç›´æ¥æ”¾åœ¨è‡ªå®šä¹‰çš„RecylerViewé‡Œäº†ï¼Œæ²¡æœ‰åšè§£è€¦ï¼Œ
+æ‰€ä»¥è‡ªå®šä¹‰ç±»å¯èƒ½éœ€è¦ä½œä¸ºAdvancedRecylerViewçš„å†…éƒ¨ç±»å®ç°äº†ã€‚
 
-For different requirements£¬u can realize another animation with self-defining a class extending CustomItemDecor(foreground)
+For different requirementsï¼Œu can realize another animation with self-defining a class extending CustomItemDecor(foreground)
 u should not use ItemDecoration without RecylerView,in consideration of this,ur custom class shoule be inner class of AdvancedRecylerView
 
 
@@ -83,7 +83,7 @@ u should not use ItemDecoration without RecylerView,in consideration of this,ur 
 
 
 
-ÊµÏÖ±³¾°Ğ§¹û¿ÉÒÔ×Ô¶¨Òå¼Ì³ĞAdvancedDrawableµÄÀà
+å®ç°èƒŒæ™¯æ•ˆæœå¯ä»¥è‡ªå®šä¹‰ç»§æ‰¿AdvancedDrawableçš„ç±»
 
 self-defining a class extending AdvancedDrawable(background)
 
@@ -93,6 +93,6 @@ self-defining a class extending AdvancedDrawable(background)
 
 
 
-ÁíÍâÒª¸ĞĞ»Ò»ÏÂPhoenix(by Yalantis)Õâ¸öÏîÄ¿£¬ÒòÎªÀïÃæµÄ×ÊÔ´ÊÇÖ±½ÓÄÃÀ´ÓÃµÄ¡£ÄãÎÊÎÒÎªÊ²Ã´£¿£¿£¿Ïë±Ø¡£¡£¡£´ó¸Å¡£¡£¡£ÊÇÒòÎª¡£¡£¡£ÎÒÀÁ°É¡£
+å¦å¤–è¦æ„Ÿè°¢ä¸€ä¸‹Phoenix(by Yalantis)è¿™ä¸ªé¡¹ç›®ï¼Œå› ä¸ºé‡Œé¢çš„èµ„æºæ˜¯ç›´æ¥æ‹¿æ¥ç”¨çš„ã€‚
 
 I wanna thank Yalantis for project Phoenix,i used its sources.u asked me why??? I am lazy~!
