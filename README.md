@@ -95,4 +95,4 @@ self-defining a class extending AdvancedDrawable(background)
 
 另外要感谢一下Phoenix(by Yalantis)这个项目，因为里面的资源是直接拿来用的。
 
-I wanna thank Yalantis for project Phoenix,i used its sources.u asked me why??? I am lazy~!
+I wanna thank Yalantis for project Phoenix,i used its sources.
